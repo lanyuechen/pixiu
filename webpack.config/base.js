@@ -8,14 +8,31 @@ module.exports = {
   entry: path.resolve(__dirname, '../src/index.js'),
   output: {
     path: path.resolve(__dirname, '../dist'),
-    filename: 'bundle.js',
+    filename: '[name].js',
+    chunkFilename: '[id].js',
   },
   devServer: {
     contentBase: path.resolve(__dirname, '../dist'),
     compress: true,
   },
-  externals: {
-    'pixi.js': 'PIXI',
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+            name: "vendor",
+            test: /[\\/]node_modules[\\/]/,
+            chunks: "all",
+            priority: 10
+        },
+        common: {
+            name: "common",
+            test: /[\\/]src[\\/]/,
+            minSize: 1024,
+            chunks: "all",
+            priority: 5
+        }
+      }
+    }
   },
   module: {
     rules: [
@@ -33,14 +50,12 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       title: '测试环境',
-      template: './src/index.ejs',
+      template: './src/template.ejs',
       inject: 'body',
     }),
     new CopyWebpackPlugin({
       patterns: [
         { from: './src/assets', to: 'assets' },
-        { from: './node_modules/pixi.js/dist/browser/pixi.min.js', to: 'assets/pixi/'},
-        { from: './node_modules/pixi.js/dist/browser/pixi.min.js.map', to: 'assets/pixi/'},
       ],
     }),
     new webpack.HotModuleReplacementPlugin(),
