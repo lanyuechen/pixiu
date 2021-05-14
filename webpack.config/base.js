@@ -1,15 +1,15 @@
 const webpack = require('webpack');
 const path = require('path');
+
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-  mode: 'development',
   entry: path.resolve(__dirname, '../src/index.js'),
   output: {
     path: path.resolve(__dirname, '../dist'),
     filename: 'bundle.js',
   },
-  devtool: 'eval',
   devServer: {
     contentBase: path.resolve(__dirname, '../dist'),
     compress: true,
@@ -35,6 +35,13 @@ module.exports = {
       title: '测试环境',
       template: './src/index.ejs',
       inject: 'body',
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: './src/assets', to: 'assets' },
+        { from: './node_modules/pixi.js/dist/browser/pixi.min.js', to: 'assets/pixi/'},
+        { from: './node_modules/pixi.js/dist/browser/pixi.min.js.map', to: 'assets/pixi/'},
+      ],
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.ProgressPlugin()
