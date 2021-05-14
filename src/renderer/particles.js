@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js'
+import * as PIXI from 'pixi.js';
 import * as random from './random'
 
 function overlap(x, y, viewport, starSize) {
